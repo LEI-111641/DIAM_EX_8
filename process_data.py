@@ -65,7 +65,7 @@ print("\n=== Teste apagar_todas ===")
 apagar_todas()
 print(Questao.objects.all())
 
-#criar nova questão para testar g) e h)
+#criar novas questões para testar g) e h)
 q1 = Questao.objects.create(questao_texto="Qual a melhor linguagem de programação?", pub_data=timezone.now())
 q1.opcao_set.create(opcao_texto="Python", votos=10)
 q1.opcao_set.create(opcao_texto="Java", votos=20)
