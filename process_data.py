@@ -57,12 +57,14 @@ def testar_alinea_b():
     print("Testes alínea b) concluídos com sucesso!\n")
 
 
+
 # c) Apagar todas as questões da BD
 def apagar_todas():
     questoes = Questao.objects.all()
     for questao in questoes:
         questao.delete()
     print("Todas as questões foram apagadas.")
+
 
 # d) Mostrar uma questão com as suas opções e votos
 def mostrar_questao(questao):
@@ -71,16 +73,55 @@ def mostrar_questao(questao):
     for opcao in opcoes:
         print("  - " + opcao.opcao_texto + " : " + str(opcao.votos) + " votos")
 
+# g mostra apenas a questão que tiver o maior número de votos, em caso de igualdade exibe todas as questões empatadas.
+def mostrar_questao_com_mais_votos():
+    questoes = Questao.objects.all()
+    max_votos = 0
+    questoes_com_mais_votos = []
 
-# --- Execução Automática ---
+    for questao in questoes:
+        total_votos = sum(opcao.votos for opcao in questao.opcao_set.all())
+        if total_votos > max_votos:
+            max_votos = total_votos
+            questoes_com_mais_votos = [questao]
+        elif total_votos == max_votos:
+            questoes_com_mais_votos.append(questao)
 
-# 1. Apagar os dados temporários do amigo (se o utilizador pretender, pode descomentar a linha abaixo)
-# apagar_todas()
+    print("Questão(s) com mais votos (" + str(max_votos) + " votos):")
+    for questao in questoes_com_mais_votos:
+        mostrar_questao(questao)
 
-# 2. Executar alínea b (que usa a alínea a)
+
+# h Obter o número total de votos registados na BD, iterando sobre todas as opções registadas.
+def total_votos():
+    questoes = Questao.objects.all()
+    total_votos_bd = 0
+
+    for questao in questoes:
+        total_votos_bd += sum(opcao.votos for opcao in questao.opcao_set.all())
+
+    print("Número total de votos registados: " + str(total_votos_bd))
+    return total_votos_bd
+
+
+# --- Execução Automática e Testes Combinados ---
+
+# 1. Apagar tudo para garantir que os testes não acumulam lixo na base de dados
+apagar_todas()
+
+# 2. Executar alínea b (que usa a alínea a) para povoar a base de dados
 testar_alinea_b()
 
-# 3. Mostrar os dados de uma questão inserida para testar a função d) do seu amigo
+# 3. Testar a alínea d) mostrando a primeira questão inserida
+print("\n=== Teste mostrar_questao ===")
 q = Questao.objects.first()
 if q:
     mostrar_questao(q)
+
+# 4. Testar alínea g) (código do colega)
+print("\n=== Teste mostrar_questao_com_mais_votos ===")
+mostrar_questao_com_mais_votos()
+
+# 5. Testar alínea h) (código do colega)
+print("\n=== Teste total_votos ===")
+total_votos()
