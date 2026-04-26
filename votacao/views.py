@@ -64,3 +64,24 @@ def option_detail(request, option_id):
         option.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
     return Response(status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET', 'POST'])
+def comments(request, question_id):
+    if request.method == 'GET':
+        try:
+            question = Questao.objects.get(pk=question_id)
+        except Questao.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        
+        comment_list = question.comentario_set.all().order_by('-data')
+        serializer = ComentarioSerializer(comment_list, many=True)
+        return Response(serializer.data)
+    
+    elif request.method == 'POST':
+        data = request.data.copy()
+        data['questao'] = question_id
+        serializer = ComentarioSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
