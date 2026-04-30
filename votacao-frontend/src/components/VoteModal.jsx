@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import  {useState} from "react";
 import {Button, Modal, ModalHeader, ModalBody} from "reactstrap";
 import axios from "axios";
 import VoteForm from "./VoteForm";

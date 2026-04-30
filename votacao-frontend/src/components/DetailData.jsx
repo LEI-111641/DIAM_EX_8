@@ -1,12 +1,18 @@
-import React from "react";
 import {Button, Form, FormGroup, Table} from "reactstrap";
 import moment from "moment";
+import { useNavigate } from "react-router-dom";
 
 function DetailData({options, question, toggle}) { // (1)
     const closeModal = (e) => { // (2)
         e.preventDefault();
         toggle();
     }
+    const navigate = useNavigate();
+
+    const goToHome = () => {
+        navigate(`/`);
+    };
+
     return (
         <Form onSubmit={closeModal}> {/* (3) */}
             <FormGroup>
@@ -33,7 +39,7 @@ function DetailData({options, question, toggle}) { // (1)
                     </tbody>
                 </Table>
             </FormGroup>
-            <Button>Fechar</Button> {/* (3) */}
+            <Button onClick={goToHome}>Fechar</Button> {/* (3) */}
         </Form>
     );
 }
