@@ -1,27 +1,19 @@
 import 'bootstrap/dist/css/bootstrap.min.css'
-import QuestionTable from "./QuestionTable";
-import Header from "./Header";
-import {Container, Row, Col} from "reactstrap";
+import {BrowserRouter, Route, Routes} from "react-router-dom";
+import Homepage from "../components-ex9/Homepage.jsx";
+import Teste from "../components-ex9/Teste.jsx";
 
 function Home() {
     return (
-        <>
-            <Header/>
-            <Content/>
-        </>
+        <BrowserRouter>
+            <Routes>
+                <Route path="/" element={<Homepage/>}/>
+                <Route path="/teste" element={<Teste/>}/>
+            </Routes>
+        </BrowserRouter>
     );
 }
 
-function Content() {
-    return (
-        <Container style={{marginTop: "20px", maxWidth: "800px"}}>
-            <Row>
-                <Col>
-                    <QuestionTable/>
-                </Col>
-            </Row>
-        </Container>
-    );
-}
+
 
 export default Home;
