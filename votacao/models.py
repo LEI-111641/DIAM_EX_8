@@ -4,7 +4,7 @@ import datetime
 
 class Questao(models.Model):
     questao_texto = models.CharField(max_length=200)
-    pub_data = models.DateTimeField('data de publicacao')
+    pub_data = models.DateTimeField('data de publicacao', auto_now_add=True)
 
     def __str__(self):
         return self.questao_texto
