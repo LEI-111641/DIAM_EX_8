@@ -43,10 +43,7 @@ def options(request, question_id):
         serializer = OpcaoSerializer(option_list, many=True)
         return Response(serializer.data)
     elif request.method == 'POST':
-        data = request.data.copy()
-        data['questao'] = question_id
-
-        serializer = OpcaoSerializer(data=data)
+        serializer = OpcaoSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(status=status.HTTP_201_CREATED)
