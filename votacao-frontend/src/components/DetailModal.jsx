@@ -12,7 +12,7 @@ function DetailModal({question}) {
 
     return (
         <Button onClick={goToDetails} color="warning">
-            Detalhe
+            Detalhes
         </Button>
     );
 }
