@@ -1,6 +1,6 @@
 import axios from "axios";
 import {useEffect, useState} from "react";
-import {useParams, useLocation, useNavigate} from "react-router-dom"; // Adicionei useNavigate
+import {useParams, useLocation, useNavigate} from "react-router-dom";
 import DetailData from "../components/DetailData.jsx";
 
 function QuestionDetails() {
