@@ -1,8 +1,9 @@
-import React, {useEffect, useState} from "react";
+import {useEffect, useState} from "react";
 import {Table} from "reactstrap";
 import DetailModal from "./DetailModal";
 import VoteModal from "./VoteModal";
 import axios from "axios";
+import DeleteModal from "../components-ex9/DeleteModal.jsx";
 
 function QuestionTable() {
     const URL_QUESTIONS = "http://localhost:8000/votacao/api/questions/"; // (1)
@@ -34,6 +35,7 @@ function QuestionTable() {
                                 <DetailModal question={question}/>
                                 &nbsp;
                                 <VoteModal question={question}/>
+                                <DeleteModal question={question}/>
                             </td>
                         </tr>
                     )
