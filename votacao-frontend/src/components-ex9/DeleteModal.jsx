@@ -1,9 +1,9 @@
 import {Button} from "reactstrap";
 import axios from "axios";
 
-function DeleteModal({question}){
+function DeleteModal({question}) {
 
-    function deleteQuestion(){
+    function deleteQuestion() {
         axios.delete(`http://localhost:8000/votacao/api/question/${question.id}`)
             .then(() => {
                 alert("Questão apagada com sucesso!");

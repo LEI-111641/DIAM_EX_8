@@ -1,18 +1,18 @@
 import {Button} from "reactstrap";
-import { useNavigate } from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 
-function DetailModal({ question }) {
+function DetailModal({question}) {
     const navigate = useNavigate();
 
     const goToDetails = () => {
         navigate(`/question/${question.id}`, {
-            state: { question }
+            state: {question}
         });
     };
 
     return (
         <Button onClick={goToDetails} color="warning">
-            Detalhe
+            Detalhes
         </Button>
     );
 }
