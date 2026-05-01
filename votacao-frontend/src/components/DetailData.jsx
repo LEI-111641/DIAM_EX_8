@@ -1,39 +1,49 @@
 import React from "react";
-import {Button, Form, FormGroup, Table} from "reactstrap";
+import { Button, Form, FormGroup, Table } from "reactstrap";
 import moment from "moment";
+import { useNavigate } from "react-router-dom";
 
-function DetailData({options, comments, question, toggle}) { // (1)
-    const closeModal = (e) => { // (2)
+function DetailData({ options, comments, question, toggle }) {
+    const navigate = useNavigate();
+
+    const closeModal = (e) => {
         e.preventDefault();
         toggle();
-    }
+    };
+
+    const goToHome = () => {
+        navigate(`/`);
+    };
+
     return (
-        <Form onSubmit={closeModal}> {/* (3) */}
+        <Form onSubmit={closeModal}>
             <FormGroup>
                 <b>Texto:</b>
                 <p>{question.questao_texto} </p>
                 <b>Data de publicação:</b>
-                <p>{moment(question.pub_data).format("YYYY-MM-DD HH:mm")}</p> {/* (4) */}
+                <p>{moment(question.pub_data).format("YYYY-MM-DD HH:mm")}</p>
             </FormGroup>
+
             <FormGroup>
                 <Table>
                     <thead>
-                    <tr>
-                        <th style={{textAlign: "left"}}>Opção</th>
-                        <th style={{textAlign: "right"}}>Votos</th>
-                    </tr>
+                        <tr>
+                            <th style={{ textAlign: "left" }}>Opção</th>
+                            <th style={{ textAlign: "right" }}>Votos</th>
+                        </tr>
                     </thead>
                     <tbody>
-                    {options.map(o => // (5)
-                        <tr key={o.id}>
-                            <td style={{textAlign: "left"}}>{o.opcao_texto}</td>
-                            <td style={{textAlign: "right"}}>{o.votos}</td>
-                        </tr>
-                    )}
+                        {options.map(o => (
+                            <tr key={o.id}>
+                                <td style={{ textAlign: "left" }}>{o.opcao_texto}</td>
+                                <td style={{ textAlign: "right" }}>{o.votos}</td>
+                            </tr>
+                        ))}
                     </tbody>
                 </Table>
             </FormGroup>
-            
+
+            {/* Início da tua secção de Comentários */}
             <FormGroup>
                 <b>Comentários:</b>
                 {(!comments || comments.length === 0) ? (
@@ -49,7 +59,10 @@ function DetailData({options, comments, question, toggle}) { // (1)
                     </div>
                 )}
             </FormGroup>
-            <Button>Fechar</Button> {/* (3) */}
+            {/* Fim da secção de Comentários */}
+
+            {/* Botão do Figueira com a navegação */}
+            <Button onClick={goToHome}>Fechar</Button>
         </Form>
     );
 }
