@@ -1,9 +1,8 @@
-import React from "react";
-import { Button, Form, FormGroup, Table } from "reactstrap";
+import {Button, Form, FormGroup, Table} from "reactstrap";
 import moment from "moment";
-import { useNavigate } from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 
-function DetailData({ options, comments, question, toggle }) {
+function DetailData({options, comments, question, toggle}) {
     const navigate = useNavigate();
 
     const closeModal = (e) => {
@@ -16,54 +15,77 @@ function DetailData({ options, comments, question, toggle }) {
     };
 
     return (
-        <Form onSubmit={closeModal}>
-            <FormGroup>
-                <b>Texto:</b>
-                <p>{question.questao_texto} </p>
-                <b>Data de publicação:</b>
-                <p>{moment(question.pub_data).format("YYYY-MM-DD HH:mm")}</p>
-            </FormGroup>
+        <div className="container" style={{marginTop: "20px"}}>
+            <h2>Detalhes da Questão #{question.id}</h2>
+            <hr/>
 
-            <FormGroup>
-                <Table>
-                    <thead>
+            <Form onSubmit={closeModal}>
+                <FormGroup>
+                    <strong>Texto:</strong>
+                    <p>{question.questao_texto}</p>
+
+                    <strong>Data de publicação:</strong>
+                    <p className="text-muted">
+                        {moment(question.pub_data).format("YYYY-MM-DD HH:mm")}
+                    </p>
+                </FormGroup>
+
+                <FormGroup>
+                    <Table borderless size="sm">
+                        <thead>
                         <tr>
-                            <th style={{ textAlign: "left" }}>Opção</th>
-                            <th style={{ textAlign: "right" }}>Votos</th>
+                            <th style={{textAlign: "left"}}>Opção</th>
+                            <th style={{textAlign: "right"}}>Votos</th>
                         </tr>
-                    </thead>
-                    <tbody>
+                        </thead>
+                        <tbody>
                         {options.map(o => (
                             <tr key={o.id}>
-                                <td style={{ textAlign: "left" }}>{o.opcao_texto}</td>
-                                <td style={{ textAlign: "right" }}>{o.votos}</td>
+                                <td style={{textAlign: "left"}}>{o.opcao_texto}</td>
+                                <td style={{textAlign: "right"}}>
+                                    <strong>{o.votos}</strong>
+                                </td>
                             </tr>
                         ))}
-                    </tbody>
-                </Table>
-            </FormGroup>
+                        </tbody>
+                    </Table>
+                </FormGroup>
 
-            {/* Início da tua secção de Comentários */}
-            <FormGroup>
-                <b>Comentários:</b>
-                {(!comments || comments.length === 0) ? (
-                    <p className="text-muted"><small>Ainda não há comentários.</small></p>
-                ) : (
-                    <div style={{ maxHeight: "200px", overflowY: "auto", border: "1px solid #ccc", padding: "10px", borderRadius: "5px" }}>
-                        {comments.map(c => (
-                            <div key={c.id} style={{ marginBottom: "10px", paddingBottom: "5px", borderBottom: "1px solid #eee" }}>
-                                <strong>{c.autor}</strong> <small className="text-muted">({moment(c.data).format("YYYY-MM-DD HH:mm")})</small>
-                                <p style={{ margin: "5px 0 0 0" }}>{c.texto}</p>
-                            </div>
-                        ))}
-                    </div>
-                )}
-            </FormGroup>
-            {/* Fim da secção de Comentários */}
+                <FormGroup>
+                    <strong>Comentários:</strong>
+                    {(!comments || comments.length === 0) ? (
+                        <p className="text-muted"><small>Ainda não há comentários.</small></p>
+                    ) : (
+                        <div style={{
+                            marginTop: "10px",
+                            maxHeight: "250px",
+                            overflowY: "auto",
+                            paddingRight: "10px"
+                        }}>
+                            {comments.map(c => (
+                                <div key={c.id} style={{
+                                    marginBottom: "15px",
+                                    borderBottom: "1px solid #eee",
+                                    paddingBottom: "10px"
+                                }}>
+                                    <strong>{c.autor || "Anónimo"}</strong>
+                                    <small className="text-muted ms-2">
+                                        ({moment(c.data).format("YYYY-MM-DD HH:mm")})
+                                    </small>
+                                    <p style={{margin: "5px 0 0 0"}}>{c.comentario_texto || c.texto}</p>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                </FormGroup>
 
-            {/* Botão do Figueira com a navegação */}
-            <Button onClick={goToHome}>Fechar</Button>
-        </Form>
+                <div style={{marginTop: "20px"}}>
+                    <Button color="secondary" onClick={goToHome}>
+                        Fechar e Voltar
+                    </Button>
+                </div>
+            </Form>
+        </div>
     );
 }
 

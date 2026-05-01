@@ -1,20 +1,31 @@
 import axios from "axios";
 import {useEffect, useState} from "react";
-import {useParams, useLocation} from "react-router-dom";
+import {useParams, useLocation, useNavigate} from "react-router-dom"; // Adicionei useNavigate
 import DetailData from "../components/DetailData.jsx";
 
 function QuestionDetails() {
-    const { id } = useParams();
+    const {id} = useParams();
     const location = useLocation();
+    const navigate = useNavigate();
 
     const question = location.state?.question;
 
-    const URL_OPTIONS = "http://localhost:8000/votacao/api/options/";
+    const URL_OPTIONS = `http://localhost:8000/votacao/api/options/${id}`;
+    const URL_COMMENTS = `http://localhost:8000/votacao/api/comments/${id}`;
+
     const [optionList, setOptionList] = useState([]);
+    const [commentList, setCommentList] = useState([]);
 
     useEffect(() => {
-        axios.get(URL_OPTIONS + id)
-            .then(res => setOptionList(res.data));
+        // Carrega Opções
+        axios.get(URL_OPTIONS)
+            .then(res => setOptionList(res.data))
+            .catch(err => console.error("Erro opções:", err));
+
+        // Carrega Comentários
+        axios.get(URL_COMMENTS)
+            .then(res => setCommentList(res.data))
+            .catch(err => console.error("Erro comentários:", err));
     }, [id]);
 
     if (!question) return <p>Sem dados da pergunta (refresh da página?)</p>;
@@ -23,7 +34,9 @@ function QuestionDetails() {
         <div>
             <DetailData
                 options={optionList}
+                comments={commentList}
                 question={question}
+                toggle={() => navigate("/")}
             />
         </div>
     );
