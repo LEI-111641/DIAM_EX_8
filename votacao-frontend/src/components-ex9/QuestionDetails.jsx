@@ -20,36 +20,37 @@ function QuestionDetails() {
     const [commentList, setCommentList] = useState([]);
     const [novaOpcao, setNovaOpcao] = useState("");
     const [editandoQuestao, setEditandoQuestao] = useState(false);
-    const [questaoTexto, setQuestaoTexto] = useState("");
+    const [questaoTexto, setQuestaoTexto] = useState(question?.questao_texto || "");
     const [editandoOpcaoId, setEditandoOpcaoId] = useState(-1);
     const [opcaoTextoEdit, setOpcaoTextoEdit] = useState("");
 
-    const loadOptions = function() {
+    const loadOptions = function () {
         axios.get(URL_OPTIONS)
-            .then(function(res) { setOptionList(res.data); });
+            .then(function (res) {
+                setOptionList(res.data);
+            });
     };
 
-    const loadComments = function() {
+    const loadComments = function () {
         axios.get(URL_COMMENTS)
-            .then(function(res) { setCommentList(res.data); });
+            .then(function (res) {
+                setCommentList(res.data);
+            });
     };
 
-    useEffect(function() {
+    useEffect(function () {
         loadOptions();
         loadComments();
-        if (question) {
-            setQuestaoTexto(question.questao_texto);
-        }
     }, [id]);
 
     // Adicionar opção
-    const adicionarOpcao = function() {
+    const adicionarOpcao = function () {
         if (novaOpcao !== "") {
             axios.post(URL_OPTIONS, {
                 questao: id,
                 opcao_texto: novaOpcao,
                 votos: 0
-            }).then(function() {
+            }).then(function () {
                 setNovaOpcao("");
                 loadOptions();
             });
@@ -57,37 +58,37 @@ function QuestionDetails() {
     };
 
     // Apagar opção
-    const apagarOpcao = function(opcaoId) {
+    const apagarOpcao = function (opcaoId) {
         axios.delete(URL_OPTION + opcaoId)
-            .then(function() {
+            .then(function () {
                 loadOptions();
             });
     };
 
     // Guardar edição da questão
-    const guardarQuestao = function() {
+    const guardarQuestao = function () {
         axios.put(URL_QUESTION, {
             questao_texto: questaoTexto,
             pub_data: question.pub_data
-        }).then(function() {
+        }).then(function () {
             setEditandoQuestao(false);
             question.questao_texto = questaoTexto;
         });
     };
 
     // Começar a editar uma opção
-    const comecarEditarOpcao = function(opcao) {
+    const comecarEditarOpcao = function (opcao) {
         setEditandoOpcaoId(opcao.id);
         setOpcaoTextoEdit(opcao.opcao_texto);
     };
 
     // Guardar edição de uma opção
-    const guardarOpcao = function(opcao) {
+    const guardarOpcao = function (opcao) {
         axios.put(URL_OPTION + opcao.id, {
             questao: id,
             opcao_texto: opcaoTextoEdit,
             votos: opcao.votos
-        }).then(function() {
+        }).then(function () {
             setEditandoOpcaoId(-1);
             setOpcaoTextoEdit("");
             loadOptions();
@@ -109,14 +110,19 @@ function QuestionDetails() {
                         <Input
                             type="text"
                             value={questaoTexto}
-                            onChange={function(e) { setQuestaoTexto(e.target.value); }}
+                            onChange={function (e) {
+                                setQuestaoTexto(e.target.value);
+                            }}
                         />
                         <Button color="primary" size="sm" style={{marginTop: "5px"}}
-                            onClick={guardarQuestao}>
+                                onClick={guardarQuestao}>
                             Guardar
                         </Button>
                         <Button color="secondary" size="sm" style={{marginTop: "5px", marginLeft: "5px"}}
-                            onClick={function() { setEditandoQuestao(false); setQuestaoTexto(question.questao_texto); }}>
+                                onClick={function () {
+                                    setEditandoQuestao(false);
+                                    setQuestaoTexto(question.questao_texto);
+                                }}>
                             Cancelar
                         </Button>
                     </div>
@@ -124,7 +130,9 @@ function QuestionDetails() {
                     <div>
                         <p>{question.questao_texto}</p>
                         <Button color="info" size="sm"
-                            onClick={function() { setEditandoQuestao(true); }}>
+                                onClick={function () {
+                                    setEditandoQuestao(true);
+                                }}>
                             Editar Questão
                         </Button>
                     </div>
@@ -137,56 +145,66 @@ function QuestionDetails() {
             <h4>Opções</h4>
             <Table>
                 <thead>
-                    <tr>
-                        <th style={{textAlign: "left"}}>Opção</th>
-                        <th style={{textAlign: "right"}}>Votos</th>
-                        <th style={{textAlign: "center"}}>Ações</th>
-                    </tr>
+                <tr>
+                    <th style={{textAlign: "left"}}>Opção</th>
+                    <th style={{textAlign: "right"}}>Votos</th>
+                    <th style={{textAlign: "center"}}>Ações</th>
+                </tr>
                 </thead>
                 <tbody>
-                    {optionList.map(function(o) {
-                        return (
-                            <tr key={o.id}>
-                                <td style={{textAlign: "left"}}>
-                                    {editandoOpcaoId === o.id ? (
-                                        <Input
-                                            type="text"
-                                            value={opcaoTextoEdit}
-                                            onChange={function(e) { setOpcaoTextoEdit(e.target.value); }}
-                                        />
-                                    ) : (
-                                        o.opcao_texto
-                                    )}
-                                </td>
-                                <td style={{textAlign: "right"}}>{o.votos}</td>
-                                <td style={{textAlign: "center"}}>
-                                    {editandoOpcaoId === o.id ? (
-                                        <div>
-                                            <Button color="primary" size="sm"
-                                                onClick={function() { guardarOpcao(o); }}>
-                                                Guardar
-                                            </Button>
-                                            <Button color="secondary" size="sm" style={{marginLeft: "5px"}}
-                                                onClick={function() { setEditandoOpcaoId(-1); }}>
-                                                Cancelar
-                                            </Button>
-                                        </div>
-                                    ) : (
-                                        <div>
-                                            <Button color="info" size="sm"
-                                                onClick={function() { comecarEditarOpcao(o); }}>
-                                                Editar
-                                            </Button>
-                                            <Button color="danger" size="sm" style={{marginLeft: "5px"}}
-                                                onClick={function() { apagarOpcao(o.id); }}>
-                                                Apagar
-                                            </Button>
-                                        </div>
-                                    )}
-                                </td>
-                            </tr>
-                        );
-                    })}
+                {optionList.map(function (o) {
+                    return (
+                        <tr key={o.id}>
+                            <td style={{textAlign: "left"}}>
+                                {editandoOpcaoId === o.id ? (
+                                    <Input
+                                        type="text"
+                                        value={opcaoTextoEdit}
+                                        onChange={function (e) {
+                                            setOpcaoTextoEdit(e.target.value);
+                                        }}
+                                    />
+                                ) : (
+                                    o.opcao_texto
+                                )}
+                            </td>
+                            <td style={{textAlign: "right"}}>{o.votos}</td>
+                            <td style={{textAlign: "center"}}>
+                                {editandoOpcaoId === o.id ? (
+                                    <div>
+                                        <Button color="primary" size="sm"
+                                                onClick={function () {
+                                                    guardarOpcao(o);
+                                                }}>
+                                            Guardar
+                                        </Button>
+                                        <Button color="secondary" size="sm" style={{marginLeft: "5px"}}
+                                                onClick={function () {
+                                                    setEditandoOpcaoId(-1);
+                                                }}>
+                                            Cancelar
+                                        </Button>
+                                    </div>
+                                ) : (
+                                    <div>
+                                        <Button color="info" size="sm"
+                                                onClick={function () {
+                                                    comecarEditarOpcao(o);
+                                                }}>
+                                            Editar
+                                        </Button>
+                                        <Button color="danger" size="sm" style={{marginLeft: "5px"}}
+                                                onClick={function () {
+                                                    apagarOpcao(o.id);
+                                                }}>
+                                            Apagar
+                                        </Button>
+                                    </div>
+                                )}
+                            </td>
+                        </tr>
+                    );
+                })}
                 </tbody>
             </Table>
 
@@ -196,7 +214,9 @@ function QuestionDetails() {
                 <Input
                     type="text"
                     value={novaOpcao}
-                    onChange={function(e) { setNovaOpcao(e.target.value); }}
+                    onChange={function (e) {
+                        setNovaOpcao(e.target.value);
+                    }}
                     placeholder="Texto da nova opção"
                 />
             </FormGroup>
@@ -210,24 +230,26 @@ function QuestionDetails() {
             <h4>Comentários</h4>
             <Table>
                 <thead>
-                    <tr>
-                        <th style={{textAlign: "left"}}>Username</th>
-                        <th style={{textAlign: "left"}}>Comentário</th>
-                    </tr>
+                <tr>
+                    <th style={{textAlign: "left"}}>Username</th>
+                    <th style={{textAlign: "left"}}>Comentário</th>
+                </tr>
                 </thead>
                 <tbody>
-                    {commentList.map(function(c) {
-                        return (
-                            <tr key={c.id}>
-                                <td style={{textAlign: "left"}}>{c.autor}</td>
-                                <td style={{textAlign: "left"}}>{c.texto}</td>
-                            </tr>
-                        );
-                    })}
+                {commentList.map(function (c) {
+                    return (
+                        <tr key={c.id}>
+                            <td style={{textAlign: "left"}}>{c.autor}</td>
+                            <td style={{textAlign: "left"}}>{c.texto}</td>
+                        </tr>
+                    );
+                })}
                 </tbody>
             </Table>
 
-            <Button color="secondary" onClick={function() { navigate("/"); }}>
+            <Button color="secondary" onClick={function () {
+                navigate("/");
+            }}>
                 Voltar
             </Button>
         </div>
